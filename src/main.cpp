@@ -5,6 +5,7 @@
 #include <math.h>
 #define WIDTH 1024
 #define HEIGHT 768
+Extern "C" {
 void draw_frame(double t,double dt){
 clear_screen(0.1f,0.2f,0.3f,1.f);
 #define NUM_FLAKES 100
@@ -40,7 +41,7 @@ float wy=sinf(0.3f*(x+t*0.01f))*GY*0.5f*(MIN((float)x*3.f/GX,1.f));
 fill_solid_rectangle(FX+x*BX,FY+y*BY+wy,FX+(x+1)*BX,FY+(y+1)*BY+wy,c?0.f:1.f,c?47/255.f:1.f,c?108/255.f:1.f,1.f);
 }}
 fill_image(250.f,10.f,1.f,1.f,1.f,1.f,1.f,"reindeer.png");
-}
+}}
 int main(){
 init_webgl(WIDTH,HEIGHT);
 set_animation_frame_callback(&draw_frame);

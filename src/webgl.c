@@ -11,17 +11,13 @@ float find_character_pair_kerning(unsigned int ch1,unsigned int ch2,int charSize
 static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
 static GLuint quad,colorPos,matPos,solidColor;
 static float pixelWidth,pixelHeight;
-
-static GLuint compile_shader(GLenum shaderType,const char *src)
-{
+static GLuint compile_shader(GLenum shaderType,const char *src){
 GLuint shader=glCreateShader(shaderType);
 glShaderSource(shader,1,&src,NULL);
 glCompileShader(shader);
 return shader;
 }
-
-static GLuint create_program(GLuint vertexShader,GLuint fragmentShader)
-{
+static GLuint create_program(GLuint vertexShader,GLuint fragmentShader){
 GLuint program=glCreateProgram();
 glAttachShader(program,vertexShader);
 glAttachShader(program,fragmentShader);
@@ -30,9 +26,7 @@ glLinkProgram(program);
 glUseProgram(program);
 return program;
 }
-
-static GLuint create_texture()
-{
+static GLuint create_texture(){
 GLuint texture;
 glGenTextures(1,&texture);
 glBindTexture(GL_TEXTURE_2D,texture);
@@ -42,8 +36,7 @@ glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
 glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
 return texture;
 }
-void EMSCRIPTEN_KEEPALIVE init_webgl(int width,int height)
-{
+void EMSCRIPTEN_KEEPALIVE init_webgl(int width,int height){
 double dpr=emscripten_get_device_pixel_ratio();
 emscripten_set_element_css_size("canvas",width/dpr,height/dpr);
 emscripten_set_canvas_element_size("canvas",width,height);
@@ -124,8 +117,7 @@ GLuint texture;
 }Texture;
 #define MAX_TEXTURES 256
 static Texture textures[MAX_TEXTURES]={};
-static Texture *find_or_cache_url(const char *url)
-{
+static Texture *find_or_cache_url(const char *url){
 for(int i=0;i<MAX_TEXTURES;++i)
 if(!strcmp(textures[i].url,url))
 return textures+i;

@@ -1,10 +1,9 @@
 #include <math.h>
-#define WIDTH 1024
-#define HEIGHT 768
 #include <GLES3/gl3.h>
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #include <string.h>
+static GLsizei S=EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
 
 extern "C" {
 void init_webgl(int width,int height);
@@ -164,6 +163,6 @@ fill_solid_rectangle(FX+x*BX,FY+y*BY+wy,FX+(x+1)*BX,FY+(y+1)*BY+wy,c?0.f:1.f,c?4
 fill_image(250.f,10.f,1.f,1.f,1.f,1.f,1.f,"reindeer.png");
 }
 int main(){
-init_webgl(WIDTH,HEIGHT);
+init_webgl(S,S);
 emscripten_set_main_loop((void(*)())draw_frame,0,0);
 }

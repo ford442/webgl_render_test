@@ -1,6 +1,4 @@
 #include <math.h>
-#define WIDTH EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
-#define HEIGHT EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
 #include <GLES3/gl3.h>
 #include <emscripten.h>
 #include <emscripten/html5.h>
@@ -16,7 +14,7 @@ void fill_image(float x0,float y0,float scale,float r,float g,float b,float a,co
 void request_animation_frame_loop(EM_BOOL(*cb)(float time,void *userData),void *userData);
 void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
 }
-
+GLsizei S;
 static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
 static GLuint quad,colorPos,matPos,solidColor;
 static float pixelWidth,pixelHeight;
@@ -143,7 +141,7 @@ void draw_frame(double t,double dt){
 clear_screen(0.1f,0.2f,0.3f,1.f);
 #define FPX 50.f
 #define FPW 25.f
-#define FPH (HEIGHT-75.f)
+#define FPH (S-75.f)
 fill_solid_rectangle(FPX,0.f,FPX+FPW,FPH,0,0,0,1.f);
 #define FX 80
 #define FH 200
@@ -164,6 +162,7 @@ fill_solid_rectangle(FX+x*BX,FY+y*BY+wy,FX+(x+1)*BX,FY+(y+1)*BY+wy,c?0.f:1.f,c?4
 fill_image(250.f,10.f,1.f,1.f,1.f,1.f,1.f,"reindeer.png");
 }
 int main(){
-init_webgl(WIDTH,HEIGHT);
+S=EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
+init_webgl(S,S);
 emscripten_set_main_loop((void(*)())draw_frame,0,0);
 }

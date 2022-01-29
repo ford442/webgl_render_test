@@ -3,7 +3,7 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #include <string.h>
-#define S EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10)
+#define S 1024
 
 extern "C" {
 void init_webgl(int width,int height);

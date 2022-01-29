@@ -12,7 +12,6 @@ double rand01(void);
 void clear_screen(float r,float g,float b,float a);
 void fill_solid_rectangle(float x0,float y0,float x1,float y1,float r,float g,float b,float a);
 void fill_image(float x0,float y0,float scale,float r,float g,float b,float a,const char *url);
-void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
 void request_animation_frame_loop(EM_BOOL(*cb)(double time,void *userData),void *userData);
 static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
 static GLuint quad,colorPos,matPos,solidColor;
@@ -124,6 +123,8 @@ GLuint texture;
 #define MAX_TEXTURES 256
 static Texture textures[MAX_TEXTURES]={};
 static Texture *find_or_cache_url(const char *url){
+  void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
+
 for(int i=0;i<MAX_TEXTURES;++i)
 if(!strcmp(textures[i].url,url))
 return textures+i;

@@ -142,7 +142,7 @@ void draw_frame(double t,double dt){
 clear_screen(0.1f,0.2f,0.3f,1.f);
 #define FPX 50.f
 #define FPW 25.f
-#define FPH (HEIGHT-75.f)
+#define FPH ((float)S-75.f)
 fill_solid_rectangle(FPX,0.f,FPX+FPW,FPH,0,0,0,1.f);
 #define FX 80
 #define FH 200

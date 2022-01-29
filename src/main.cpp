@@ -1,6 +1,8 @@
 
 #include "webgl.h"
 #include <math.h>
+#include <emscripten.h>
+#include <emscripten/html5.h>
 #define WIDTH 1024
 #define HEIGHT 768
 void draw_frame(double t,double dt){

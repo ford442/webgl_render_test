@@ -3,6 +3,7 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #include <string.h>
+#include <iostream>
 
 extern "C" {
 void init_webgl(int width,int height);

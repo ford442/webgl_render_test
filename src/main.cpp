@@ -3,6 +3,7 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #include <string.h>
+static GLsizei S;
 
 extern "C" {
 void init_webgl(int width,int height);
@@ -162,7 +163,7 @@ fill_solid_rectangle(FX+x*BX,FY+y*BY+wy,FX+(x+1)*BX,FY+(y+1)*BY+wy,c?0.f:1.f,c?4
 fill_image(250.f,10.f,1.f,1.f,1.f,1.f,1.f,"reindeer.png");
 }
 int main(){
-static GLsizei S=EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
+S=EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
 init_webgl(S,S);
 emscripten_set_main_loop((void(*)())draw_frame,0,0);
 }

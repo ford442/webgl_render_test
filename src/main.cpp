@@ -122,9 +122,8 @@ GLuint texture;
 }Texture;
 #define MAX_TEXTURES 256
 static Texture textures[MAX_TEXTURES]={};
+void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
 static Texture *find_or_cache_url(const char *url){
-  void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
-
 for(int i=0;i<MAX_TEXTURES;++i)
 if(!strcmp(textures[i].url,url))
 return textures+i;

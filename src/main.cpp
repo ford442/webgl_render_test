@@ -1,6 +1,6 @@
 #include <math.h>
-#define WIDTH 1024
-#define HEIGHT 768
+#define WIDTH EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
+#define HEIGHT EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
 #include <GLES3/gl3.h>
 #include <emscripten.h>
 #include <emscripten/html5.h>

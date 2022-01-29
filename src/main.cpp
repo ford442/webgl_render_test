@@ -1,7 +1,6 @@
 #include <math.h>
 #define WIDTH 1024
 #define HEIGHT 768
-
 #include <GLES2/gl2.h>
 #include <emscripten.h>
 #include <emscripten/html5.h>
@@ -12,15 +11,9 @@ void set_animation_frame_callback(void(*func)(double t,double dt));
 double rand01(void);
 void clear_screen(float r,float g,float b,float a);
 void fill_solid_rectangle(float x0,float y0,float x1,float y1,float r,float g,float b,float a);
-void fill_text(float x0,float y0,float r,float g,float b,float a,const char *str,float spacing,int charSize,int shadow);
 void fill_image(float x0,float y0,float scale,float r,float g,float b,float a,const char *url);
-void play_audio(const char *url,int loop);
-
-void upload_unicode_char_to_texture(int unicodeChar,int charSize,int applyShadow);
 void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
 void request_animation_frame_loop(EM_BOOL(*cb)(double time,void *userData),void *userData);
-float find_character_pair_kerning(unsigned int ch1,unsigned int ch2,int charSize);
-
 static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
 static GLuint quad,colorPos,matPos,solidColor;
 static float pixelWidth,pixelHeight;
@@ -146,76 +139,8 @@ void EMSCRIPTEN_KEEPALIVE fill_image(float x0,float y0,float scale,float r,float
 Texture *t=find_or_cache_url(url);
 fill_textured_rectangle(x0,y0,x0+t->w*scale,y0+t->h* scale,r,g,b,a,t->texture);
 }
-typedef struct Glyph{
-unsigned int ch;
-int charSize;
-int shadow;
-GLuint texture;
-}Glyph;
-#define MAX_GLYPHS 256
-static Glyph glyphs[MAX_GLYPHS]={};
-static Glyph *find_or_cache_character(unsigned int ch,int charSize,int shadow){
-for(int i=0;i<MAX_TEXTURES;++i){
-if(glyphs[i].ch ==ch&&glyphs[i].charSize==charSize&& glyphs[i].shadow==shadow){
-return glyphs+i;
-}
-else if(!glyphs[i].ch){
-glyphs[i].ch=ch;
-glyphs[i].charSize=charSize;
-glyphs[i].shadow=shadow;
-glyphs[i].texture=create_texture();
-upload_unicode_char_to_texture(ch,charSize,shadow);
-return glyphs+i;
-}
-return 0;
-}}
-typedef struct KerningPair{
-unsigned int ch1,ch2;
-int charSize;
-float kerning;
-}KerningPair;
-#define MAX_KERNING_PAIRS 4096
-static KerningPair kerningPairs[MAX_KERNING_PAIRS]={};
-static float get_character_pair_kerning(unsigned int ch1,unsigned int ch2,int charSize){
-size_t i=0;
-for(;i<MAX_KERNING_PAIRS;++i){
-if(!kerningPairs[i].ch1)
-break;
-if (kerningPairs[i].ch1==ch1&&kerningPairs[i].ch2==ch2&& kerningPairs[i].charSize==charSize)
-return kerningPairs[i].kerning;
-}
-float kerning=find_character_pair_kerning(ch1,ch2,charSize);
-kerningPairs[i].ch1=ch1;
-kerningPairs[i].ch2=ch2;
-kerningPairs[i].charSize=charSize;
-kerningPairs[i].kerning=kerning;
-return kerning;
-}
-static void fill_char(float x0,float y0,float r,float g,float b,float a,unsigned int ch,int charSize,int shadow){
-fill_textured_rectangle(x0,y0,x0+charSize,y0+charSize,r,g,b,a,find_or_cache_character(ch,charSize,shadow)->texture);
-}
-void EMSCRIPTEN_KEEPALIVE fill_text(float x0,float y0,float r,float g,float b,float a,const char *str,float spacing,int charSize,int shadow){
-while(*str){
-char ch=*str++;
-fill_char(x0,y0,r,g,b,a,ch,charSize,shadow);
-char next=*str;
-x0+=get_character_pair_kerning(ch,next,charSize);
-}}
-
 void draw_frame(double t,double dt){
 clear_screen(0.1f,0.2f,0.3f,1.f);
-#define NUM_FLAKES 100
-#define FLAKE_SIZE 10
-#define FLAKE_SPEED 0.05f
-#define SNOWINESS 0.998
-static struct{float x,y;}flakes[NUM_FLAKES]={};
-#define SIM do{ \
-flakes[i].y-=dt*(FLAKE_SPEED+i*0.05f/NUM_FLAKES); \
-flakes[i].x+=dt*(fmodf(i*345362.f,0.02f) - 0.01f); \
-float c=0.5f+i*0.5/NUM_FLAKES; \
-if(flakes[i].y>-FLAKE_SIZE) fill_solid_rectangle(flakes[i].x,flakes[i].y,flakes[i].x+FLAKE_SIZE,flakes[i].y+FLAKE_SIZE,c,c,c,1.f); \
-else if(rand01()>SNOWINESS) flakes[i].y=HEIGHT,flakes[i].x=WIDTH*rand01(); \
-}while(0)for(int i=0;i<NUM_FLAKES/2;++i)SIM;
 #define FPX 50.f
 #define FPW 25.f
 #define FPH (HEIGHT-75.f)

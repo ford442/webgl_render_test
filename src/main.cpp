@@ -166,5 +166,6 @@ int main(){
 S=EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
 init_webgl((int)S,(int)S);
 printf("u",S);
+printf("%s \n","Test.");
 emscripten_set_main_loop((void(*)())draw_frame,0,0);
 }

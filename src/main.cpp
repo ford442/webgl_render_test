@@ -15,7 +15,7 @@ void fill_image(float x0,float y0,float scale,float r,float g,float b,float a,co
 void request_animation_frame_loop(EM_BOOL(*cb)(float time,void *userData),void *userData);
 void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
 }
-static unsigned int S;
+static int S;
 static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
 static GLuint quad,colorPos,matPos,solidColor;
 static float pixelWidth,pixelHeight;
@@ -164,8 +164,8 @@ fill_image(250.f,10.f,1.f,1.f,1.f,1.f,1.f,"reindeer.png");
 }
 int main(){
 S=EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
-init_webgl((int)S,(int)S);
-printf("u",S);
+init_webgl(S,S);
+printf("%u \n",S);
 printf("%s \n","Test.");
 emscripten_set_main_loop((void(*)())draw_frame,0,0);
 }

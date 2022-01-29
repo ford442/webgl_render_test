@@ -144,7 +144,8 @@ static Glyph glyphs[MAX_GLYPHS]={};
 static Glyph *find_or_cache_character(unsigned int ch,int charSize,int shadow){
 for(int i=0;i<MAX_TEXTURES;++i){
 if(glyphs[i].ch ==ch&&glyphs[i].charSize==charSize&& glyphs[i].shadow==shadow){
-return glyphs+i;}
+return glyphs+i;
+}
 else if(!glyphs[i].ch){
 glyphs[i].ch=ch;
 glyphs[i].charSize=charSize;
@@ -154,7 +155,7 @@ upload_unicode_char_to_texture(ch,charSize,shadow);
 return glyphs+i;
 }
 return 0;
-}
+}}
 typedef struct KerningPair{
 unsigned int ch1,ch2;
 int charSize;

@@ -5,7 +5,7 @@
 #include <math.h>
 #define WIDTH 1024
 #define HEIGHT 768
-Extern "C" {
+extern "C" {
 void draw_frame(double t,double dt){
 clear_screen(0.1f,0.2f,0.3f,1.f);
 #define NUM_FLAKES 100

@@ -1,4 +1,3 @@
-#include "webgl.h"
 #include <math.h>
 #define WIDTH 1024
 #define HEIGHT 768
@@ -8,9 +7,19 @@
 #include <emscripten/html5.h>
 #include <string.h>
 
+#pragma once
+void init_webgl(int width,int height);
+void set_animation_frame_callback(void(*func)(double t,double dt));
+double rand01(void);
+void clear_screen(float r,float g,float b,float a);
+void fill_solid_rectangle(float x0,float y0,float x1,float y1,float r,float g,float b,float a);
+void fill_text(float x0,float y0,float r,float g,float b,float a,const char *str,float spacing,int charSize,int shadow);
+void fill_image(float x0,float y0,float scale,float r,float g,float b,float a,const char *url);
+void play_audio(const char *url,int loop);
+
 void upload_unicode_char_to_texture(int unicodeChar,int charSize,int applyShadow);
 void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
-void request_animation_frame_loop(EM_BOOL(*cb)(double &time,void *userData),void *userData);
+void request_animation_frame_loop(EM_BOOL(*cb)(double time,void *userData),void *userData);
 float find_character_pair_kerning(unsigned int ch1,unsigned int ch2,int charSize);
 
 static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
@@ -193,8 +202,6 @@ fill_char(x0,y0,r,g,b,a,ch,charSize,shadow);
 char next=*str;
 x0+=get_character_pair_kerning(ch,next,charSize);
 }}
-
-
 
 void draw_frame(double t,double dt){
 clear_screen(0.1f,0.2f,0.3f,1.f);

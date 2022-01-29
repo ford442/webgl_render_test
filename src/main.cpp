@@ -10,7 +10,7 @@
 
 void upload_unicode_char_to_texture(int unicodeChar,int charSize,int applyShadow);
 void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
-void request_animation_frame_loop(EM_BOOL(*cb)(double time,void *userData),void *userData);
+void request_animation_frame_loop(EM_BOOL(*cb)(double &time,void *userData),void *userData);
 float find_character_pair_kerning(unsigned int ch1,unsigned int ch2,int charSize);
 
 static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;

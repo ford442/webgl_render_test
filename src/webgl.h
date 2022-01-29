@@ -1,7 +1,5 @@
 #pragma once
-#ifdef __cplusplus
 extern "C" {
-#endif
 void init_webgl(int width,int height);
 void set_animation_frame_callback(void(*func)(double t,double dt));
 double rand01(void);

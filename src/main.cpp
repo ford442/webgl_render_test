@@ -1,4 +1,3 @@
-#include <emscripten.h>
 
 #include "webgl.h"
 #include <math.h>

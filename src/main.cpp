@@ -1,4 +1,4 @@
-
+#include "webgl.h"
 #include <math.h>
 #define WIDTH 1024
 #define HEIGHT 768

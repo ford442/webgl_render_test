@@ -103,7 +103,7 @@ f(time,dt);
 return EM_TRUE;
 }
 void EMSCRIPTEN_KEEPALIVE set_animation_frame_callback(void(*func)(double t,double dt)){
-emscripten_request_animation_frame_loop(4.0,&func);
+emscripten_request_animation_frame_loop(tick,&func);
 }
 void EMSCRIPTEN_KEEPALIVE clear_screen(float r,float g,float b,float a){
 glClearColor(r,g,b,a);

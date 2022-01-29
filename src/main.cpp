@@ -165,5 +165,5 @@ fill_image(250.f,10.f,1.f,1.f,1.f,1.f,1.f,"reindeer.png");
 }
 int main(){
 init_webgl(WIDTH,HEIGHT);
-set_animation_frame_callbemscripten_set_main_loop((void(*)())draw_frame,0,0);
+emscripten_set_main_loop((void(*)())draw_frame,0,0);
 }

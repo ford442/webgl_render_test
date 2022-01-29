@@ -14,7 +14,7 @@ void fill_image(float x0,float y0,float scale,float r,float g,float b,float a,co
 void request_animation_frame_loop(EM_BOOL(*cb)(float time,void *userData),void *userData);
 void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
 }
-static GLsizei S;
+static uint S;
 static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
 static GLuint quad,colorPos,matPos,solidColor;
 static float pixelWidth,pixelHeight;

@@ -1,8 +1,8 @@
 
 tst1: main.cpp  Makefile
-	emcc main.cpp  -sUSE_SDL=1 --closure 0 \
+	emcc main.cpp  --closure 0 \
 -sUSE_WEBGL2=1 -sMAX_WEBGL_VERSION=2 -sMIN_WEBGL_VERSION=2 \
--Oz -o test.html \
+-O3 -o test.js \
 --js-library library_js2.js
 
 

@@ -6,6 +6,7 @@
 #include <emscripten/html5.h>
 #include <string.h>
 
+extern "C" {
 void init_webgl(int width,int height);
 void set_animation_frame_callback(void(*func)(double t,double dt));
 double rand01(void);
@@ -13,6 +14,9 @@ void clear_screen(float r,float g,float b,float a);
 void fill_solid_rectangle(float x0,float y0,float x1,float y1,float r,float g,float b,float a);
 void fill_image(float x0,float y0,float scale,float r,float g,float b,float a,const char *url);
 void request_animation_frame_loop(EM_BOOL(*cb)(double time,void *userData),void *userData);
+void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
+}
+
 static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
 static GLuint quad,colorPos,matPos,solidColor;
 static float pixelWidth,pixelHeight;
@@ -122,7 +126,6 @@ GLuint texture;
 }Texture;
 #define MAX_TEXTURES 256
 static Texture textures[MAX_TEXTURES]={};
-float load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
 static Texture *find_or_cache_url(const char *url){
 for(int i=0;i<MAX_TEXTURES;++i)
 if(!strcmp(textures[i].url,url))

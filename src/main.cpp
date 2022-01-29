@@ -1,6 +1,4 @@
 
-#include <emscripten.h>
-#include <emscripten/html5.h>
 #include "webgl.h"
 #include <math.h>
 #define WIDTH 1024

@@ -7,7 +7,6 @@
 #include <emscripten/html5.h>
 #include <string.h>
 
-#pragma once
 void init_webgl(int width,int height);
 void set_animation_frame_callback(void(*func)(double t,double dt));
 double rand01(void);

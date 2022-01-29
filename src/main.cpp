@@ -93,10 +93,10 @@ glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,1,1,0,GL_RGBA,GL_UNSIGNED_BYTE,&whitePixel)
 double EMSCRIPTEN_KEEPALIVE rand01(){
 return emscripten_random();
 }
-typedef void(*tick_func)(double t,double dt);
-static EM_BOOL tick(double time,void *userData){
-static double t0;
-double dt=time-t0;
+typedef void(*tick_func)(float t,float dt);
+static EM_BOOL tick(float time,void *userData){
+static float t0;
+float dt=time-t0;
 t0=time;
 tick_func f=(tick_func)(userData);
 f(time,dt);

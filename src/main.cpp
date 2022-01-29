@@ -164,5 +164,6 @@ fill_image(250.f,10.f,1.f,1.f,1.f,1.f,1.f,"reindeer.png");
 int main(){
 S=EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
 init_webgl((int)S,(int)S);
+sprintf(S);
 emscripten_set_main_loop((void(*)())draw_frame,0,0);
 }

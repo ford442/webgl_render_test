@@ -34,7 +34,7 @@ GLint logSize = 0;
 glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logSize);
 std::vector<GLchar> errorLog(maxLength);
 glGetShaderInfoLog(shader, logSize, &maxLength, &errorLog[0]);
-std::cout << InfoLog << std::endl;
+std::cout << errorLog << std::endl;
 return shader;
 }
 static GLuint create_program(GLuint vertexShader,GLuint fragmentShader){

@@ -23,6 +23,14 @@ static GLuint compile_shader(GLenum shaderType,const char *src){
 GLuint shader=glCreateShader(shaderType);
 glShaderSource(shader,1,&src,NULL);
 glCompileShader(shader);
+  
+GLint maxLength = 0;
+glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+GLint logSize = 0;
+glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logSize);
+std::vector<GLchar> errorLog(maxLength);
+glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
+
 return shader;
 }
 static GLuint create_program(GLuint vertexShader,GLuint fragmentShader){

@@ -26,10 +26,9 @@ static GLuint compile_shader(GLenum shaderType,const char *src){
 GLuint shader=glCreateShader(shaderType);
 glShaderSource(shader,1,&src,NULL);
 glCompileShader(shader);
-  
-GLint maxLength = 0;
+GLint maxLength=0;
 glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
-GLint logSize = 0;
+GLint logSize=0;
 glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logSize);
 std::vector<GLchar> errorLog(maxLength);
 glGetShaderInfoLog(shader, logSize, &maxLength, &errorLog[0]);
@@ -73,6 +72,7 @@ static const char vertex_shader[]=  /*
 "layout(location=0)in vec4 pos;out vec2 uv;uniform mat4 mat;"
 "void main(){uv=pos.xy;gl_Position=mat*pos;}"
 "\n\0"; */
+"#version 200 es\n"
 "attribute vec4 pos;"
 "varying vec2 uv;"
 "uniform mat4 mat;"

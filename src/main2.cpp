@@ -5,6 +5,9 @@
 #include <string.h>
 #include <cstdio>
 #include <vector>
+#include <cassert>
+#include <iostream>
+
 
 extern "C" {
 void init_webgl(int width,int height);

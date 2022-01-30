@@ -8,7 +8,6 @@
 #include <cassert>
 #include <iostream>
 
-
 extern "C" {
 void init_webgl(int width,int height);
 void set_animation_frame_callback(void(*func)(double t,double dt));
@@ -66,15 +65,23 @@ attrs.alpha=0;
 attrs.majorVersion=2;
 glContext=emscripten_webgl_create_context("canvas",&attrs);
 emscripten_webgl_make_context_current(glContext);
-pixelWidth=2.f/width;
-pixelHeight=2.f/height;
+pixelWidth=2.0f/width;
+pixelHeight=2.0f/height;
+  
 static const char vertex_shader[]=
-"#version 300 es /n";
-"in vec4 pos;out vec2 uv;uniform mat4 mat;void main(){uv=pos.xy;gl_Position=mat*pos;}";
+"#version 300 es\n"
+"layout(location=0)in vec4 pos;out vec2 uv;uniform mat4 mat;"
+"void main(){uv=pos.xy;gl_Position=mat*pos;}"
+"\n\0";
+
 GLuint vs=compile_shader(GL_VERTEX_SHADER,vertex_shader);
 static const char fragment_shader[]=
-"#version 300 es /n";
-"precision highp float;out vec4 gl_FragColor;uniform sampler2D tex;in vec2 uv;uniform vec4 color;void main(){gl_FragColor=color*texture(tex,uv);}";
+"#version 300 es\n"
+"precision mediump float;out vec4 gl_FragColor;"
+"uniform sampler2D tex;in vec2 uv;uniform vec4 color;"
+"void main(){gl_FragColor=color*texture(tex,uv);}"
+"\n\0";
+
 GLuint fs=compile_shader(GL_FRAGMENT_SHADER,fragment_shader);
 GLuint program=create_program(vs,fs);
 colorPos=glGetUniformLocation(program,"color");
@@ -141,7 +148,7 @@ Texture *t=find_or_cache_url(url);
 fill_textured_rectangle(x0,y0,x0+t->w*scale,y0+t->h* scale,r,g,b,a,t->texture);
 }
 void draw_frame(double t,double dt){
-clear_screen(0.1f,0.2f,0.3f,1.f);
+clear_screen(0.1f,0.2f,0.3f,1.0f);
 #define FPX 50.f
 #define FPW 25.f
 #define FPH (S-75.f)
@@ -162,10 +169,10 @@ int c=COLOR(x,y);
 float wy=sinf(0.3f*(x+t*0.01f))*GY*0.5f*(MIN((float)x*3.f/GX,1.f));
 fill_solid_rectangle(FX+x*BX,FY+y*BY+wy,FX+(x+1)*BX,FY+(y+1)*BY+wy,c?0.f:1.f,c?47/255.f:1.f,c?108/255.f:1.f,1.f);
 }}
-fill_image(250.f,10.f,1.f,1.f,1.f,1.f,1.f,"reindeer.png");
+fill_image(250.0f,10.0f,1.0f,1.0f,1.0f,1.0f,1.0f,"reindeer.png");
 }
 int main(){
-S=EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
+S=EM_ASM_INT({return document.getElementById('pmhig').innerHTML;});
 init_webgl(S,S);
 printf("%u \n",S);
 printf("%s \n","Test.");

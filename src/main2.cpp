@@ -4,6 +4,7 @@
 #include <emscripten/html5.h>
 #include <string.h>
 #include <cstdio>
+#include <vector>
 
 extern "C" {
 void init_webgl(int width,int height);

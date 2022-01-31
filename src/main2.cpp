@@ -29,6 +29,7 @@ static GLuint compile_shader(GLenum shaderType,const char *src){
 GLuint shader=glCreateShader(shaderType);
 glShaderSource(shader,1,&src,NULL);
 glCompileShader(shader);
+/*
 GLint maxLength=0;
 glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 GLint logSize=0;
@@ -36,6 +37,7 @@ glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logSize);
 std::vector<GLchar> errorLog(maxLength);
 glGetShaderInfoLog(shader, logSize, &maxLength, &errorLog[0]);
 std::cout << &errorLog << std::endl;
+*/
 return shader;
 }
 static GLuint create_program(GLuint vertexShader,GLuint fragmentShader){
@@ -70,22 +72,22 @@ emscripten_webgl_make_context_current(glContext);
 pixelWidth=2.0f/width;
 pixelHeight=2.0f/height;
 static const char vertex_shader[]=
-  "attribute vec4 pos;"
-    "varying vec2 uv;"
-    "uniform mat4 mat;"
-    "void main(){"
-      "uv=pos.xy;"
-      "gl_Position=mat*pos;"
-    "}";
+"attribute vec4 pos;"
+"varying vec2 uv;"
+"uniform mat4 mat;"
+"void main(){"
+"uv=pos.xy;"
+"gl_Position=mat*pos;"
+"}";
 GLuint vs=compile_shader(GL_VERTEX_SHADER,vertex_shader);
 static const char fragment_shader[]=
- "precision lowp float;"
-    "uniform sampler2D tex;"
-    "varying vec2 uv;"
-    "uniform vec4 color;"
-    "void main(){"
-      "gl_FragColor=color*texture2D(tex,uv);"
-    "}";
+"precision lowp float;"
+"uniform sampler2D tex;"
+"varying vec2 uv;"
+"uniform vec4 color;"
+"void main(){"
+"gl_FragColor=color*texture2D(tex,uv);"
+"}";
 GLuint fs=compile_shader(GL_FRAGMENT_SHADER,fragment_shader);
 GLuint program=create_program(vs,fs);
 colorPos=glGetUniformLocation(program,"color");
@@ -179,8 +181,5 @@ int main(){
 S=EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
 init_webgl(S,S);
 printf("%u \n",S);
-nanosleep(&req,&rem);
-nanosleep(&req,&rem);
-nanosleep(&req,&rem);
 emscripten_set_main_loop((void(*)())draw_frame,0,0);
 }

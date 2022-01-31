@@ -1,5 +1,5 @@
 #include <math.h>
-#include <GLES3/gl3.h>
+#include <GLES3/gl2.h>
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #include <string.h>
@@ -70,12 +70,12 @@ emscripten_webgl_make_context_current(glContext);
 pixelWidth=2.0f/width;
 pixelHeight=2.0f/height;
 static const char vertex_shader[]=
-
+  /*
 "#version 300 es \n"
 "precision mediump float;in vec4 pos;out vec2 uv;uniform mat4 mat;"
 "void main(){uv=pos.xy;gl_Position=mat*pos;}"
 "\n\0";  
-  /*
+ */
 "#version 100 \n"
 "attribute vec4 pos;"
 "varying vec2 uv;"
@@ -83,15 +83,16 @@ static const char vertex_shader[]=
 "void main(){"
 "uv=pos.xy;"
 "gl_Position=mat*pos;"
-"} \n\0"; */
+"} \n\0";
 GLuint vs=compile_shader(GL_VERTEX_SHADER,vertex_shader);
 static const char fragment_shader[]=
+/* 
 "#version 300 es \n"
 "precision mediump float;out vec4 gl_FragColor;"
 "uniform sampler2D tex;in vec2 uv;uniform vec4 color;"
 "void main(){gl_FragColor=color*texture(tex,uv);}"
 " \n\0";
-/* 
+ */
 "#version 100 \n"
 "precision lowp float;"
 "uniform sampler2D tex;"
@@ -99,7 +100,7 @@ static const char fragment_shader[]=
 "uniform vec4 color;"
 "void main(){"
 "gl_FragColor=color*texture2D(tex,uv);"
-"} \n\0"; */
+"} \n\0";
 GLuint fs=compile_shader(GL_FRAGMENT_SHADER,fragment_shader);
 GLuint program=create_program(vs,fs);
 colorPos=glGetUniformLocation(program,"color");

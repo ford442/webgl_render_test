@@ -9,7 +9,7 @@
 #include <iostream>
 #include <ctime>
 struct timespec rem;
-struct timespec req={0,150000000};
+struct timespec req={0,25000000};
 
 
 extern "C" {
@@ -22,7 +22,7 @@ void fill_image(float x0,float y0,float scale,float r,float g,float b,float a,co
 void request_animation_frame_loop(EM_BOOL(*cb)(float time,void *userData),void *userData);
 void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
 }
-static int S;
+int S;
 static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
 static GLuint quad,colorPos,matPos,solidColor;
 static float pixelWidth,pixelHeight;
@@ -76,30 +76,30 @@ static const char vertex_shader[]=  /*
 "layout(location=0)in vec4 pos;out vec2 uv;uniform mat4 mat;"
 "void main(){uv=pos.xy;gl_Position=mat*pos;}"
 "\n\0"; */
-"#version 200 es\n"
+"#version 100 \n"
 "attribute vec4 pos;"
 "varying vec2 uv;"
 "uniform mat4 mat;"
 "void main(){"
 "uv=pos.xy;"
 "gl_Position=mat*pos;"
-"}";
+"} \n\0";
 GLuint vs=compile_shader(GL_VERTEX_SHADER,vertex_shader);
 static const char fragment_shader[]=
 /* "#version 300 es\n"
 "precision mediump float;out vec4 gl_FragColor;"
 "uniform sampler2D tex;in vec2 uv;uniform vec4 color;"
 "void main(){gl_FragColor=color*texture(tex,uv);}"
-"\n\0";
+" \n\0";
 */
-"#version 200 es\n"
+"#version 100 \n"
 "precision lowp float;"
 "uniform sampler2D tex;"
 "varying vec2 uv;"
 "uniform vec4 color;"
 "void main(){"
 "gl_FragColor=color*texture2D(tex,uv);"
-"}";
+"} \n\0";
 GLuint fs=compile_shader(GL_FRAGMENT_SHADER,fragment_shader);
 GLuint program=create_program(vs,fs);
 colorPos=glGetUniformLocation(program,"color");

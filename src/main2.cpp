@@ -1,5 +1,5 @@
 #include <math.h>
-#include <GLES2/gl3.h>
+#include <GLES3/gl3.h>
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #include <string.h>

@@ -7,6 +7,10 @@
 #include <vector>
 #include <cassert>
 #include <iostream>
+#include <ctime>
+struct timespec rem;
+struct timespec req={0,150000000};
+
 
 extern "C" {
 void init_webgl(int width,int height);
@@ -186,9 +190,11 @@ fill_solid_rectangle(FX+x*BX,FY+y*BY+wy,FX+(x+1)*BX,FY+(y+1)*BY+wy,c?0.f:1.f,c?4
 fill_image(250.0f,10.0f,1.0f,1.0f,1.0f,1.0f,1.0f,"reindeer.png");
 }
 int main(){
-S=EM_ASM_INT({return document.getElementById('pmhig').innerHTML;});
+S=EM_ASM_INT({return window.innerHeight;});
 init_webgl(S,S);
 printf("%u \n",S);
-printf("%s \n","Test.");
-emscripten_set_main_loop((void(*)())draw_frame,0,0);
+nanosleep(&req,&rem);
+nanosleep(&req,&rem);
+nanosleep(&req,&rem);
+\emscripten_set_main_loop((void(*)())draw_frame,0,0);
 }

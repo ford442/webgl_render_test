@@ -167,6 +167,8 @@ fill_textured_rectangle(x0,y0,x0+t->w*scale,y0+t->h* scale,r,g,b,a,t->texture);
 }
 void draw_frame(double t,double dt){
 clear_screen(0.1f,0.2f,0.3f,1.0f);
+  fill_image(250.0f,10.0f,1.0f,1.0f,1.0f,1.0f,1.0f,"reindeer.png");
+
 #define FPX 50.f
 #define FPW 25.f
 #define FPH (S-75.f)
@@ -187,7 +189,6 @@ int c=COLOR(x,y);
 float wy=sinf(0.3f*(x+t*0.01f))*GY*0.5f*(MIN((float)x*3.f/GX,1.f));
 fill_solid_rectangle(FX+x*BX,FY+y*BY+wy,FX+(x+1)*BX,FY+(y+1)*BY+wy,c?0.f:1.f,c?47/255.f:1.f,c?108/255.f:1.f,1.f);
 }}
-fill_image(250.0f,10.0f,1.0f,1.0f,1.0f,1.0f,1.0f,"reindeer.png");
 }
 int main(){
 S=EM_ASM_INT({return window.innerHeight;});

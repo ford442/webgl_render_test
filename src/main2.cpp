@@ -176,7 +176,7 @@ fill_solid_rectangle(FX+x*BX,FY+y*BY+wy,FX+(x+1)*BX,FY+(y+1)*BY+wy,c?0.f:1.f,c?4
 fill_image(250.0f,10.0f,1.0f,1.0f,1.0f,1.0f,1.0f,"reindeer.png");
 }
 int main(){
-S=EM_ASM_INT({return window.innerHeight;});
+S=EM_ASM_INT({return parseInt(document.getElementById('pmhig').innerHTML,10);});
 init_webgl(S,S);
 printf("%u \n",S);
 nanosleep(&req,&rem);

@@ -196,5 +196,5 @@ printf("%u \n",S);
 nanosleep(&req,&rem);
 nanosleep(&req,&rem);
 nanosleep(&req,&rem);
-\emscripten_set_main_loop((void(*)())draw_frame,0,0);
+emscripten_set_main_loop((void(*)())draw_frame,0,0);
 }

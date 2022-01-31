@@ -76,7 +76,6 @@ static const char vertex_shader[]=
 "void main(){uv=pos.xy;gl_Position=mat*pos;}"
 "\n\0";  
  */
-"#version 200 es \n"
 "attribute vec4 pos;"
 "varying vec2 uv;"
 "uniform mat4 mat;"
@@ -93,7 +92,6 @@ static const char fragment_shader[]=
 "void main(){gl_FragColor=color*texture(tex,uv);}"
 " \n\0";
  */
-"#version 200 es \n"
 "precision lowp float;"
 "uniform sampler2D tex;"
 "varying vec2 uv;"

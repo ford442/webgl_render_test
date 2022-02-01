@@ -96,7 +96,7 @@ glEnable(GL_BLEND);
 glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 glGenBuffers(1,&quad);
 glBindBuffer(GL_ARRAY_BUFFER,quad);
-const float pos[]={0,0,1,0,0,1,1,1};
+const float pos[]={0,0,1,0,0,1,0.7,1};
 glBufferData(GL_ARRAY_BUFFER,sizeof(pos),pos,GL_STATIC_DRAW);
 glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,0);
 glEnableVertexAttribArray(0);

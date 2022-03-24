@@ -84,7 +84,6 @@ emscripten_webgl_make_context_current(glContext);
 pixelWidth=2.0f/width;
 pixelHeight=2.0f/height;
 static const char vertex_shader[]=
-"#version 300 es\n"
 "in vec4 pos;"
 "out vec2 uv;"
 "uniform mat4 mat;"
@@ -96,7 +95,7 @@ GLuint vs=compile_shader(GL_VERTEX_SHADER,vertex_shader);
 static const char fragment_shader[]=
 "#version 300 es\n"
 "out vec4 texColor;"
-"precision mediump float;"
+"precision lowp float;"
 "in vec2 uv;"
 "uniform vec4 color;"
 "void main(){"

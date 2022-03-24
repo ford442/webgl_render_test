@@ -77,7 +77,7 @@ emscripten_set_element_css_size("canvas",width/dpr,height/dpr);
 emscripten_set_canvas_element_size("canvas",width,height);
 EmscriptenWebGLContextAttributes attrs;
 emscripten_webgl_init_context_attributes(&attrs);
-attrs.alpha=1;
+attrs.alpha=0;
 attrs.majorVersion=2;
 glContext=emscripten_webgl_create_context("canvas",&attrs);
 emscripten_webgl_make_context_current(glContext);
@@ -96,7 +96,7 @@ GLuint vs=compile_shader(GL_VERTEX_SHADER,vertex_shader);
 static const char fragment_shader[]=
 "#version 300 es\n"
 "out vec4 texColor;"
-"precision highp float;"
+"precision lowp float;"
 "in vec2 uv;"
 "uniform vec4 color;"
 "void main(){"

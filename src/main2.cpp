@@ -84,22 +84,24 @@ emscripten_webgl_make_context_current(glContext);
 pixelWidth=2.0f/width;
 pixelHeight=2.0f/height;
 static const char vertex_shader[]=
+"#version 300 es \n"
+"uniform mat4 mat;"
 "in vec4 pos;"
 "out vec2 uv;"
-"uniform mat4 mat;"
 "void main(){"
 "uv=pos.xy;"
-"gl_Position=mat*pos;"
+"gl_Position=vec4(mat*pos);"
 "}";
 GLuint vs=compile_shader(GL_VERTEX_SHADER,vertex_shader);
 static const char fragment_shader[]=
-"#version 300 es\n"
-"out vec4 texColor;"
-"precision lowp float;"
+"#version 300 es \n"
+"precision mediump float;"
+"uniform sampler2D tex;"
 "in vec2 uv;"
 "uniform vec4 color;"
+"out vec4 texColor;"
 "void main(){"
-"texColor=color*texture(tex,uv);"
+"texColor=vec4(color*texture(tex,uv);"
 "}";
 GLuint fs=compile_shader(GL_FRAGMENT_SHADER,fragment_shader);
 GLuint program=create_program(vs,fs);

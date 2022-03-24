@@ -85,24 +85,27 @@ pixelWidth=2.0f/width;
 pixelHeight=2.0f/height;
 static const char vertex_shader[]=
 "#version 300 es \n"
+"precision mediump float;"
+"precision highp sampler2D;"
 "uniform mat4 mat;"
 "in vec4 pos;"
 "out vec2 uv;"
 "void main(){"
 "uv=pos.xy;"
 "gl_Position=vec4(mat*pos);"
-"}";
+"}\n\0";
 GLuint vs=compile_shader(GL_VERTEX_SHADER,vertex_shader);
 static const char fragment_shader[]=
 "#version 300 es \n"
 "precision mediump float;"
+"precision highp sampler2D;"
 "uniform sampler2D tex;"
 "in vec2 uv;"
 "uniform vec4 color;"
 "out vec4 texColor;"
 "void main(){"
 "texColor=vec4(color*texture(tex,uv);"
-"}";
+"}\n\0";
 GLuint fs=compile_shader(GL_FRAGMENT_SHADER,fragment_shader);
 GLuint program=create_program(vs,fs);
 colorPos=glGetUniformLocation(program,"color");

@@ -90,7 +90,7 @@ static const char vertex_shader[]=
 "void main(){"
 "uv=pos.xy;"
 "gl_Position=mat*pos;"
-"}\n\0";
+"}";
 GLuint vs=compile_shader(GL_VERTEX_SHADER,vertex_shader);
 static const char fragment_shader[]=
 "#version 300 es\n"
@@ -100,7 +100,7 @@ static const char fragment_shader[]=
 "uniform vec4 color;"
 "void main(){"
 "texColor=color*texture(tex,uv);"
-"}\n\0";
+"}";
 GLuint fs=compile_shader(GL_FRAGMENT_SHADER,fragment_shader);
 GLuint program=create_program(vs,fs);
 colorPos=glGetUniformLocation(program,"color");

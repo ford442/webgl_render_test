@@ -1,13 +1,25 @@
-#include <math.h>
-#include <GLES2/gl2.h>
 #include <emscripten.h>
 #include <emscripten/html5.h>
-#include <string.h>
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#include <GLES3/gl3.h>
+#include <GLES3/gl31.h>
+#include <GLES3/gl32.h>
+#define __gl2_h_
+#include <GLES2/gl2ext.h>
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <cstdarg>
+#include <cmath>
 #include <cstdio>
+#include <cstdint>
+#include <cstdlib>
+#include <ctime>
+#include <unistd.h>
+#include <chrono>
 #include <vector>
 #include <cassert>
-#include <iostream>
-#include <ctime>
 struct timespec rem;
 struct timespec req={0,25000000};
 
@@ -65,29 +77,31 @@ emscripten_set_element_css_size("canvas",width/dpr,height/dpr);
 emscripten_set_canvas_element_size("canvas",width,height);
 EmscriptenWebGLContextAttributes attrs;
 emscripten_webgl_init_context_attributes(&attrs);
-attrs.alpha=0;
+attrs.alpha=1;
 attrs.majorVersion=2;
 glContext=emscripten_webgl_create_context("canvas",&attrs);
 emscripten_webgl_make_context_current(glContext);
 pixelWidth=2.0f/width;
 pixelHeight=2.0f/height;
 static const char vertex_shader[]=
-"attribute vec4 pos;"
-"varying vec2 uv;"
+"#version 300 es\n"
+"in vec4 pos;"
+"out vec2 uv;"
 "uniform mat4 mat;"
 "void main(){"
 "uv=pos.xy;"
 "gl_Position=mat*pos;"
-"}";
+"}\n\0";
 GLuint vs=compile_shader(GL_VERTEX_SHADER,vertex_shader);
 static const char fragment_shader[]=
-"precision lowp float;"
-"uniform sampler2D tex;"
-"varying vec2 uv;"
+"#version 300 es\n"
+"out vec4 texColor;"
+"precision highp float;"
+"in vec2 uv;"
 "uniform vec4 color;"
 "void main(){"
-"gl_FragColor=color*texture2D(tex,uv);"
-"}";
+"texColor=color*texture(tex,uv);"
+"}\n\0";
 GLuint fs=compile_shader(GL_FRAGMENT_SHADER,fragment_shader);
 GLuint program=create_program(vs,fs);
 colorPos=glGetUniformLocation(program,"color");

@@ -24,6 +24,7 @@ struct timespec rem;
 struct timespec req={0,25000000};
 
 extern "C" {
+  
 void init_webgl(int width,int height);
 void set_animation_frame_callback(void(*func)(double t,double dt));
 double rand01(void);
@@ -32,16 +33,18 @@ void fill_solid_rectangle(float x0,float y0,float x1,float y1,float r,float g,fl
 void fill_image(float x0,float y0,float scale,float r,float g,float b,float a,const char *url);
 void request_animation_frame_loop(EM_BOOL(*cb)(float time,void *userData),void *userData);
 void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
+  
 }
+
 int S;
-static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
-static GLuint quad,colorPos,matPos,solidColor;
-static float pixelWidth,pixelHeight;
+EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
+GLuint quad,colorPos,matPos,solidColor;
+float pixelWidth,pixelHeight;
+
 static GLuint compile_shader(GLenum shaderType,const char *src){
 GLuint shader=glCreateShader(shaderType);
 glShaderSource(shader,1,&src,NULL);
 glCompileShader(shader);
-
 GLint maxLength=0;
 glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 GLint logSize=0;
@@ -49,9 +52,9 @@ glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logSize);
 std::vector<GLchar> errorLog(maxLength);
 glGetShaderInfoLog(shader, logSize, &maxLength, &errorLog[0]);
 std::cout << &errorLog << std::endl;
-
 return shader;
 }
+
 static GLuint create_program(GLuint vertexShader,GLuint fragmentShader){
 GLuint program=glCreateProgram();
 glAttachShader(program,vertexShader);
@@ -61,6 +64,7 @@ glLinkProgram(program);
 glUseProgram(program);
 return program;
 }
+
 static GLuint create_texture(){
 GLuint texture;
 glGenTextures(1,&texture);
@@ -71,6 +75,7 @@ glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
 glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
 return texture;
 }
+
 void EMSCRIPTEN_KEEPALIVE init_webgl(int width,int height){
 double dpr=emscripten_get_device_pixel_ratio();
 emscripten_set_element_css_size("canvas",width/dpr,height/dpr);
@@ -84,21 +89,21 @@ emscripten_webgl_make_context_current(glContext);
 pixelWidth=2.0f/width;
 pixelHeight=2.0f/height;
 static const char vertex_shader[]=
-" #version 300 es \n "
-"precision lowp float; \n "
-"precision lowp sampler2D; \n "
+"#version 300 es \n"
+"precision mediump float; \n"
+"precision mediump sampler2D; \n"
 "uniform mat4 mat;"
 "in vec4 pos;"
 "out vec2 uv;"
 "void main(){"
 "uv=pos.xy;"
 "gl_Position=vec4(mat*pos);"
-"} \n \0 ";
+"} \n \0";
 GLuint vs=compile_shader(GL_VERTEX_SHADER,vertex_shader);
 static const char fragment_shader[]=
 "#version 300 es \n"
-"precision lowp float; \n "
-"precision lowp sampler2D; \n "
+"precision mediump float; \n "
+"precision mediump sampler2D; \n "
 "uniform sampler2D tex;"
 "in vec2 uv;"
 "uniform vec4 color;"
@@ -122,10 +127,13 @@ solidColor=create_texture();
 unsigned int whitePixel=0xFFFFFFFFu;
 glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,1,1,0,GL_RGBA,GL_UNSIGNED_BYTE,&whitePixel);
 }
+
 double EMSCRIPTEN_KEEPALIVE rand01(){
 return emscripten_random();
 }
+
 typedef void(*tick_func)(double t,double dt);
+
 static EM_BOOL tick(double time,void *userData){
 static double t0;
 double dt=time-t0;
@@ -134,10 +142,12 @@ tick_func f=(tick_func)(userData);
 f(time,dt);
 return EM_TRUE;
 }
+
 void EMSCRIPTEN_KEEPALIVE clear_screen(float r,float g,float b,float a){
 glClearColor(r,g,b,a);
 glClear(GL_COLOR_BUFFER_BIT);
 }
+
 static void fill_textured_rectangle(float x0,float y0,float x1,float y1,float r,float g,float b,float a,GLuint texture){
 float mat[16]={(x1-x0)*pixelWidth,0,0,0,0,(y1-y0)*pixelHeight,0,0,0,0,1,0,x0*pixelWidth-1.f,y0*pixelHeight-1.f,0,1};
 glUniformMatrix4fv(matPos,1,0,mat);
@@ -145,16 +155,17 @@ glUniform4f(colorPos,r,g,b,a);
 glBindTexture(GL_TEXTURE_2D,texture);
 glDrawArrays(GL_TRIANGLE_STRIP,0,4);
 }
+
 void EMSCRIPTEN_KEEPALIVE fill_solid_rectangle(float x0,float y0,float x1,float y1,float r,float g,float b,float a)
 {fill_textured_rectangle(x0,y0,x1,y1,r,g,b,a,solidColor);
 }
-typedef struct Texture{
-char *url;
-int w,h;
-GLuint texture;
-}Texture;
+
+typedef struct Texture{char *url;int w,h;GLuint texture;}Texture;
+
 #define MAX_TEXTURES 256
+
 static Texture textures[MAX_TEXTURES]={};
+
 static Texture *find_or_cache_url(const char *url){
 for(int i=0;i<MAX_TEXTURES;++i)
 if(!strcmp(textures[i].url,url))
@@ -167,10 +178,12 @@ return textures+i;
 }
 return 0;
 }
+
 void EMSCRIPTEN_KEEPALIVE fill_image(float x0,float y0,float scale,float r,float g,float b,float a,const char *url){
 Texture *t=find_or_cache_url(url);
 fill_textured_rectangle(x0,y0,x0+t->w*scale,y0+t->h* scale,r,g,b,a,t->texture);
 }
+
 void draw_frame(double t,double dt){
 clear_screen(0.1f,0.2f,0.3f,1.0f);
 #define FPX 50.f
@@ -195,6 +208,7 @@ fill_solid_rectangle(FX+x*BX,FY+y*BY+wy,FX+(x+1)*BX,FY+(y+1)*BY+wy,c?0.f:1.f,c?4
 }}
 fill_image(250.0f,10.0f,1.0f,1.0f,1.0f,1.0f,1.0f,"reindeer.png");
 }
+
 int main(){
 double client_w,client_h;
 emscripten_get_element_css_size("#canvas",&client_w,&client_h);

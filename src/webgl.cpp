@@ -8,15 +8,17 @@ void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *out
 void request_animation_frame_loop(EM_BOOL(*cb)(double time,void *userData),void *userData);
 float find_character_pair_kerning(unsigned int ch1,unsigned int ch2,int charSize);
 
-static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
-static GLuint quad,colorPos,matPos,solidColor;
-static float pixelWidth,pixelHeight;
+EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
+GLuint quad,colorPos,matPos,solidColor;
+float pixelWidth,pixelHeight;
+
 static GLuint compile_shader(GLenum shaderType,const char *src){
 GLuint shader=glCreateShader(shaderType);
 glShaderSource(shader,1,&src,NULL);
 glCompileShader(shader);
 return shader;
 }
+
 static GLuint create_program(GLuint vertexShader,GLuint fragmentShader){
 GLuint program=glCreateProgram();
 glAttachShader(program,vertexShader);
@@ -26,6 +28,7 @@ glLinkProgram(program);
 glUseProgram(program);
 return program;
 }
+
 static GLuint create_texture(){
 GLuint texture;
 glGenTextures(1,&texture);
@@ -36,6 +39,7 @@ glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
 glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
 return texture;
 }
+
 void EMSCRIPTEN_KEEPALIVE init_webgl(int width,int height){
 double dpr=emscripten_get_device_pixel_ratio();
 emscripten_set_element_css_size("canvas",width/dpr,height/dpr);
@@ -81,9 +85,11 @@ solidColor=create_texture();
 unsigned int whitePixel=0xFFFFFFFFu;
 glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,1,1,0,GL_RGBA,GL_UNSIGNED_BYTE,&whitePixel);
 }
+
 double EMSCRIPTEN_KEEPALIVE rand01(){
 return emscripten_random();
 }
+
 typedef void(*tick_func)(double t,double dt);
 static EM_BOOL tick(double time,void *userData){
 static double t0;
@@ -93,13 +99,16 @@ tick_func f=(tick_func)(userData);
 f(time,dt);
 return EM_TRUE;
 }
+
 void EMSCRIPTEN_KEEPALIVE set_animation_frame_callback(void(*func)(double t,double dt)){
 emscripten_request_animation_frame_loop(tick,func);
 }
+
 void EMSCRIPTEN_KEEPALIVE clear_screen(float r,float g,float b,float a){
 glClearColor(r,g,b,a);
 glClear(GL_COLOR_BUFFER_BIT);
 }
+
 static void fill_textured_rectangle(float x0,float y0,float x1,float y1,float r,float g,float b,float a,GLuint texture){
 float mat[16]={(x1-x0)*pixelWidth,0,0,0,0,(y1-y0)*pixelHeight,0,0,0,0,1,0,x0*pixelWidth-1.f,y0*pixelHeight-1.f,0,1};
 glUniformMatrix4fv(matPos,1,0,mat);
@@ -107,16 +116,17 @@ glUniform4f(colorPos,r,g,b,a);
 glBindTexture(GL_TEXTURE_2D,texture);
 glDrawArrays(GL_TRIANGLE_STRIP,0,4);
 }
+
 void EMSCRIPTEN_KEEPALIVE fill_solid_rectangle(float x0,float y0,float x1,float y1,float r,float g,float b,float a)
 {fill_textured_rectangle(x0,y0,x1,y1,r,g,b,a,solidColor);
 }
-typedef struct Texture{
-char *url;
-int w,h;
-GLuint texture;
-}Texture;
+
+typedef struct Texture{char *url;int w,h;GLuint texture;}Texture;
+
 #define MAX_TEXTURES 256
+
 static Texture textures[MAX_TEXTURES]={};
+
 static Texture *find_or_cache_url(const char *url){
 for(int i=0;i<MAX_TEXTURES;++i)
 if(!strcmp(textures[i].url,url))
@@ -129,18 +139,18 @@ return textures+i;
 }
 return 0;
 }
+
 void EMSCRIPTEN_KEEPALIVE fill_image(float x0,float y0,float scale,float r,float g,float b,float a,const char *url){
 Texture *t=find_or_cache_url(url);
 fill_textured_rectangle(x0,y0,x0+t->w*scale,y0+t->h* scale,r,g,b,a,t->texture);
 }
-typedef struct Glyph{
-unsigned int ch;
-int charSize;
-int shadow;
-GLuint texture;
-}Glyph;
+
+typedef struct Glyph{unsigned int ch;int charSize;int shadow;GLuint texture;}Glyph;
+
 #define MAX_GLYPHS 256
+
 static Glyph glyphs[MAX_GLYPHS]={};
+
 static Glyph *find_or_cache_character(unsigned int ch,int charSize,int shadow){
 for(int i=0;i<MAX_TEXTURES;++i){
 if(glyphs[i].ch ==ch&&glyphs[i].charSize==charSize&& glyphs[i].shadow==shadow){
@@ -156,6 +166,7 @@ return glyphs+i;
 }
 return 0;
 }}
+
 typedef struct KerningPair{
 unsigned int ch1,ch2;
 int charSize;
@@ -178,9 +189,11 @@ kerningPairs[i].charSize=charSize;
 kerningPairs[i].kerning=kerning;
 return kerning;
 }
+
 static void fill_char(float x0,float y0,float r,float g,float b,float a,unsigned int ch,int charSize,int shadow){
 fill_textured_rectangle(x0,y0,x0+charSize,y0+charSize,r,g,b,a,find_or_cache_character(ch,charSize,shadow)->texture);
 }
+
 void EMSCRIPTEN_KEEPALIVE fill_text(float x0,float y0,float r,float g,float b,float a,const char *str,float spacing,int charSize,int shadow){
 while(*str){
 char ch=*str++;

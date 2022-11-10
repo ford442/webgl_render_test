@@ -1,6 +1,6 @@
 
 tst1:
-  emcc main.cpp  --closure 0 \
+    emcc main.cpp  --closure 0 \
   -sUSE_WEBGL2=1 -sMAX_WEBGL_VERSION=2 -sMIN_WEBGL_VERSION=2 \
   -o test.js \
   -sFORCE_FILESYSTEM=1 \
@@ -9,7 +9,7 @@ tst1:
 
 
 tst2:
-  emcc main2.cpp  -sFULL_ES2=0 -sFULL_ES3=1 \
+    emcc main2.cpp  -sFULL_ES2=0 -sFULL_ES3=1 \
   -sFORCE_FILESYSTEM=1 -sALLOW_MEMORY_GROWTH=0 -sINITIAL_MEMORY=1400mb \
   -sUSE_WEBGL2=1 --closure 1 -s TEXTDECODER=2  -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 \
   -s ENVIRONMENT=web -s GL_SUPPORT_AUTOMATIC_ENABLE_EXTENSIONS=0 -s GL_EXTENSIONS_IN_PREFIXED_FORMAT=0 \

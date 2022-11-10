@@ -91,8 +91,9 @@ return emscripten_random();
 }
 
 typedef void(*tick_func)(double t,double dt);
-static EM_BOOL tick(double time,void *userData){
-static double t0;
+
+EM_BOOL tick(double time,void *userData){
+double t0;
 double dt=time-t0;
 t0=time;
 tick_func f=(tick_func)(userData);

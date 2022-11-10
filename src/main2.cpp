@@ -33,7 +33,6 @@ void fill_solid_rectangle(float x0,float y0,float x1,float y1,float r,float g,fl
 void fill_image(float x0,float y0,float scale,float r,float g,float b,float a,const char *url);
 void request_animation_frame_loop(EM_BOOL(*cb)(float time,void *userData),void *userData);
 void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
-  
 }
 
 int S;

@@ -5,8 +5,6 @@
 #include <GLES3/gl3.h>
 #include <GLES3/gl31.h>
 #include <GLES3/gl32.h>
-#define __gl2_h_
-#include <GLES2/gl2ext.h>
 #include <iostream>
 #include <algorithm>
 #include <cstring>
@@ -205,7 +203,7 @@ int c=COLOR(x,y);
 float wy=sinf(0.3f*(x+t*0.01f))*GY*0.5f*(MIN((float)x*3.f/GX,1.f));
 fill_solid_rectangle(FX+x*BX,FY+y*BY+wy,FX+(x+1)*BX,FY+(y+1)*BY+wy,c?0.f:1.f,c?47/255.f:1.f,c?108/255.f:1.f,1.f);
 }}
-fill_image(250.0f,10.0f,1.0f,1.0f,1.0f,1.0f,1.0f,"reindeer.png");
+fill_image(250.0f,90.0f,1.0f,1.0f,1.0f,1.0f,1.0f,"./reindeer.png");
 }
 
 int main(){

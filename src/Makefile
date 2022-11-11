@@ -24,7 +24,7 @@ tst3:
   -sUSE_WEBGL2=1 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 \
   -s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=1 \
   -o test3.js \
-  --js-library library_js3.js --extern-pre-js setUp.js
+  --js-library library_js3.js --pre-js setUp.js
 
 
 all:  tst3

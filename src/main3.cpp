@@ -21,8 +21,16 @@
 #include <vector>
 #include <cassert>
 
+#define MAX_TEXTURES 32
+
 struct timespec rem;
 struct timespec req={0,12000000};
+int S;
+EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
+GLuint quad,colorPos,matPos,solidColor;
+float pixelWidth,pixelHeight;
+static Texture textures[MAX_TEXTURES]={};
+typedef struct Texture{char *url;int w,h;GLuint texture;}Texture;
 
 extern "C" {
   
@@ -33,12 +41,13 @@ void fill_solid_rectangle(float x0,float y0,float x1,float y1,float r,float g,fl
 void fill_image(float x0,float y0,float scale,float r,float g,float b,float a,const char *url);
 void request_animation_frame_loop(EM_BOOL(*cb)(double time,double *userData));
 void load_texture_from_url(GLuint texture,const char *url,int *outWidth,int *outHeight);
+  
 }
 
-int S;
-EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
-GLuint quad,colorPos,matPos,solidColor;
-float pixelWidth,pixelHeight;
+void EMSCRIPTEN_KEEPALIVE clear_screen(float r,float g,float b,float a){
+glClearColor(r,g,b,a);
+glClear(GL_COLOR_BUFFER_BIT);
+}
 
 static GLuint compile_shader(GLenum shaderType,const char *src){
 GLuint shader=glCreateShader(shaderType);
@@ -90,18 +99,13 @@ pixelHeight=2.0f/height;
 static const char vertex_shader[]=
 "#version 300 es \n"
 "precision mediump float;precision mediump sampler2D; \n"
-"uniform mat4 mat;"
-"in vec4 pos;"
-"out vec2 uv;"
+"uniform mat4 mat;in vec4 pos;out vec2 uv;"
 "void main(){uv=pos.xy;gl_Position=vec4(mat*pos);} \n \0";
 GLuint vs=compile_shader(GL_VERTEX_SHADER,vertex_shader);
 static const char fragment_shader[]=
 "#version 300 es \n"
 "precision mediump float;precision mediump sampler2D; \n "
-"uniform sampler2D tex;"
- "uniform vec4 color;"
-"in vec2 uv;"
-"out vec4 texColor;"
+"uniform sampler2D tex;uniform vec4 color;in vec2 uv;out vec4 texColor;"
 "void main(){texColor=vec4(color*texture(tex,uv));} \n \0 ";
 GLuint fs=compile_shader(GL_FRAGMENT_SHADER,fragment_shader);
 GLuint program=create_program(vs,fs);
@@ -120,11 +124,6 @@ unsigned int whitePixel=0xFFFFFFFFu;
 glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,1,1,0,GL_RGBA,GL_UNSIGNED_BYTE,&whitePixel);
 }
 
-void EMSCRIPTEN_KEEPALIVE clear_screen(float r,float g,float b,float a){
-glClearColor(r,g,b,a);
-glClear(GL_COLOR_BUFFER_BIT);
-}
-
 static void fill_textured_rectangle(float x0,float y0,float x1,float y1,float r,float g,float b,float a,GLuint texture){
 float mat[16]={(x1-x0)*pixelWidth,0,0,0,0,(y1-y0)*pixelHeight,0,0,0,0,1,0,x0*pixelWidth-1.f,y0*pixelHeight-1.f,0,1};
 glUniformMatrix4fv(matPos,1,0,mat);
@@ -136,12 +135,6 @@ glDrawArrays(GL_TRIANGLE_STRIP,0,4);
 void EMSCRIPTEN_KEEPALIVE fill_solid_rectangle(float x0,float y0,float x1,float y1,float r,float g,float b,float a)
 {fill_textured_rectangle(x0,y0,x1,y1,r,g,b,a,solidColor);
 }
-
-typedef struct Texture{char *url;int w,h;GLuint texture;}Texture;
-
-#define MAX_TEXTURES 32
-
-static Texture textures[MAX_TEXTURES]={};
 
 static Texture *find_or_cache_url(const char *url){
 for(int i=0;i<MAX_TEXTURES;++i)

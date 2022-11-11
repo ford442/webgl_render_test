@@ -29,8 +29,8 @@ int S;
 EMSCRIPTEN_WEBGL_CONTEXT_HANDLE glContext;
 GLuint quad,colorPos,matPos,solidColor;
 float pixelWidth,pixelHeight;
-static Texture textures[MAX_TEXTURES]={};
 typedef struct Texture{char *url;int w,h;GLuint texture;}Texture;
+static Texture textures[MAX_TEXTURES]={};
 
 extern "C" {
   
